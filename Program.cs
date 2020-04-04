@@ -10,12 +10,6 @@ namespace collections_best_practices
 
         public static void Main(string[] args)
         {
-            // IN GENERAL
-            //
-            // if the collection will grow, use list
-            // if it won't, use array
-            // or even better use IReadOnlyCollection
-
             // data you want to be able to modify
             DataToGrow_List_Example();
             DataToGrow_Array_Example();
@@ -65,13 +59,17 @@ namespace collections_best_practices
             var dataResponse = _dataRepository.GetArrayData();
             var dataNotToGrow = dataResponse as Data[] ?? dataResponse.ToArray();
 
-            // first enumeration - cast would not be necessary if this was the only operation on the data
-            foreach(var datum in dataResponse) { ; }
+            foreach (var datum in dataResponse)
+            { 
+                // some operation - cast would not be necessary if this was the only operation performed on the data
+            }
 
-            // second enumeration - if you hadn't cast the data to array then this would enumerate a second time
-            foreach(var datum in dataResponse) { ; }
+            foreach (var datum in dataResponse)
+            {
+                // another operation - if you hadn't cast the data to array then this would enumerate a second time
+            }
 
-            // and a third time
+            // third enumeration
             PrintData(dataNotToGrow);
         }
 
@@ -79,9 +77,9 @@ namespace collections_best_practices
         {
             var listDataResponse = _dataRepository.GetReadonlyListData();
 
-            // can be referenced multiple times without casting since it is of type IReadOnlyCollection
-            foreach(var datum in listDataResponse) { ; }
-            foreach(var datum in listDataResponse) { ; }
+            // IReadOnlyCollection is added to memory and can be referenced as many times as desired cheaply
+            foreach (var datum in listDataResponse) { ; }
+            foreach (var datum in listDataResponse) { ; }
 
             PrintData(listDataResponse);
         }
@@ -90,17 +88,17 @@ namespace collections_best_practices
         {
             var arrayDataResponse = _dataRepository.GetReadonlyArrayData();
 
-            // can be referenced multiple times without casting since it is of type IReadOnlyCollection
+            // IReadOnlyCollection is added to memory and can be referenced as many times as desired cheaply
             // regardless of underlying data type - in this case array data handles exactly the same as list data
-            foreach(var datum in arrayDataResponse) { ; }
-            foreach(var datum in arrayDataResponse) { ; }
+            foreach (var datum in arrayDataResponse) { ; }
+            foreach (var datum in arrayDataResponse) { ; }
 
             PrintData(arrayDataResponse);
         }
 
         private static void PrintData(IEnumerable<Data> data)
         {
-            // no casting needed as there is only a single enumeration of elements
+            // no casting needed as there is only a single enumeration of data elements
 
             Console.WriteLine();
 
